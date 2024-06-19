@@ -1,21 +1,26 @@
-// src/components/Cart.tsx
 import React from 'react';
 import { useCart, useCartDispatch } from '../context/CartContext';
 
 const Cart = () => {
-  const { items } = useCart();
+  const { items, totalQuantity } = useCart();
   const dispatch = useCartDispatch();
 
-  const handleRemove = (id: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { id, name: '', price: 0, quantity: 0 } });
+  console.log('Cart Component - Items:', items);
+  console.log('Cart Component - Total Quantity:', totalQuantity);
+
+  const handleRemove = (_id: string) => {
+    console.log('Removing item with _id:', _id);
+    dispatch({ type: 'REMOVE_ITEM', payload: { _id } });
   };
 
-  const handleIncrease = (id: string) => {
-    dispatch({ type: 'INCREASE_QUANTITY', payload: { id, name: '', price: 0, quantity: 0 } });
+  const handleIncrease = (_id: string) => {
+    console.log('Increasing quantity for item with _id:', _id);
+    dispatch({ type: 'INCREASE_QUANTITY', payload: { _id } });
   };
 
-  const handleDecrease = (id: string) => {
-    dispatch({ type: 'DECREASE_QUANTITY', payload: { id, name: '', price: 0, quantity: 0 } });
+  const handleDecrease = (_id: string) => {
+    console.log('Decreasing quantity for item with _id:', _id);
+    dispatch({ type: 'DECREASE_QUANTITY', payload: { _id } });
   };
 
   return (
@@ -24,17 +29,22 @@ const Cart = () => {
       {items.length === 0 ? (
         <p>Seu carrinho está vazio</p>
       ) : (
-        items.map(item => (
-          <div key={item.id}>
-            <p>{item.name}</p>
-            <p>{item.price}</p>
-            <p>{item.quantity}</p>
-            <button onClick={() => handleIncrease(item.id)}>+</button>
-            <button onClick={() => handleDecrease(item.id)}>-</button>
-            <button onClick={() => handleRemove(item.id)}>Remover</button>
-          </div>
-        ))
+        <ul>
+          {items.map(item => (
+            <li key={item._id}>
+              <p>{item.name}</p>
+              <p>${item.price.toFixed(2)}</p>
+              <p>Quantidade: {item.quantity}</p>
+              <button onClick={() => handleIncrease(item._id)}>+</button>
+              <button onClick={() => handleDecrease(item._id)}>-</button>
+              <button onClick={() => handleRemove(item._id)}>Remover</button>
+            </li>
+          ))}
+        </ul>
       )}
+      <div>
+        <h3>Total de Itens no Carrinho: {totalQuantity}</h3>
+      </div>
     </div>
   );
 };

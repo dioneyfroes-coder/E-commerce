@@ -1,3 +1,5 @@
+//src/pages/api/products.ts
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDatabase } from '../../lib/mongodb';
 import errorMiddleware from '../../middlewares/errorMiddleware';
