@@ -1,121 +1,96 @@
-"use client"
+// src/context/CartContext.tsx
+"use client";
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import { CartState, CartItem, Product } from '../types';
+import { CartAction } from '../actions';
 
-// Interfaces e Tipos
-interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  description: string;
-  category: string;
-}
+const CartContext = createContext<CartState | undefined>(undefined);
+const CartDispatchContext = createContext<React.Dispatch<CartAction> | undefined>(undefined);
 
-interface CartItem extends Product {
-  quantity: number;
-}
-
-interface CartState {
-  items: CartItem[];
-  totalQuantity: number;
-}
-
-type CartAction =
-  | { type: 'ADD_ITEM'; payload: Product }
-  | { type: 'REMOVE_ITEM'; payload: { _id: string } }
-  | { type: 'INCREASE_QUANTITY'; payload: { _id: string } }
-  | { type: 'DECREASE_QUANTITY'; payload: { _id: string } };
-
-// Estado inicial
 const initialState: CartState = {
   items: [],
   totalQuantity: 0,
 };
 
-// Reducer
 const cartReducer = (state: CartState, action: CartAction): CartState => {
-  console.log('Cart Reducer - Action:', action);
-  console.log('Cart Reducer - State before:', state);
-
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item._id === action.payload._id);
-      if (existingItem) {
-        const updatedItems = state.items.map(item =>
-          item._id === action.payload._id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-        const updatedState = {
-          ...state,
-          items: updatedItems,
-          totalQuantity: state.totalQuantity + 1,
+      const existingItemIndex = state.items.findIndex(item => item._id === action.payload._id);
+      let newItems = [...state.items];
+      
+      if (existingItemIndex !== -1) {
+        const existingItem = newItems[existingItemIndex];
+        const updatedItem = {
+          ...existingItem,
+          quantity: existingItem.quantity + 1,
         };
-        console.log('Cart Reducer - State after ADD_ITEM (existing item):', updatedState);
-        return updatedState;
+        newItems[existingItemIndex] = updatedItem;
       } else {
-        const updatedState = {
-          ...state,
-          items: [...state.items, { ...action.payload, quantity: 1 }],
-          totalQuantity: state.totalQuantity + 1,
-        };
-        console.log('Cart Reducer - State after ADD_ITEM (new item):', updatedState);
-        return updatedState;
+        const newItem: CartItem = { ...action.payload, quantity: 1 };
+        newItems.push(newItem);
       }
-    }
-    case 'REMOVE_ITEM': {
-      const itemToRemove = state.items.find(item => item._id === action.payload._id);
-      if (!itemToRemove) return state;
 
-      const updatedState = {
+      return {
         ...state,
-        items: state.items.filter(item => item._id !== action.payload._id),
-        totalQuantity: state.totalQuantity - itemToRemove.quantity,
-      };
-      console.log('Cart Reducer - State after REMOVE_ITEM:', updatedState);
-      return updatedState;
-    }
-    case 'INCREASE_QUANTITY': {
-      const updatedItems = state.items.map(item =>
-        item._id === action.payload._id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      const updatedState = {
-        ...state,
-        items: updatedItems,
+        items: newItems,
         totalQuantity: state.totalQuantity + 1,
       };
-      console.log('Cart Reducer - State after INCREASE_QUANTITY:', updatedState);
-      return updatedState;
+    }
+    case 'REMOVE_ITEM': {
+      const newItems = state.items.filter(item => item._id !== action.payload._id);
+      const removedItem = state.items.find(item => item._id === action.payload._id);
+      const removedQuantity = removedItem ? removedItem.quantity : 0;
+      
+      return {
+        ...state,
+        items: newItems,
+        totalQuantity: state.totalQuantity - removedQuantity,
+      };
+    }
+    case 'INCREASE_QUANTITY': {
+      const existingItemIndex = state.items.findIndex(item => item._id === action.payload._id);
+      const newItems = [...state.items];
+      const existingItem = newItems[existingItemIndex];
+      const updatedItem = {
+        ...existingItem,
+        quantity: existingItem.quantity + 1,
+      };
+      newItems[existingItemIndex] = updatedItem;
+
+      return {
+        ...state,
+        items: newItems,
+        totalQuantity: state.totalQuantity + 1,
+      };
     }
     case 'DECREASE_QUANTITY': {
-      const updatedItems = state.items
-        .map(item =>
-          item._id === action.payload._id ? { ...item, quantity: item.quantity - 1 } : item
-        )
-        .filter(item => item.quantity > 0);
-      const updatedState = {
+      const existingItemIndex = state.items.findIndex(item => item._id === action.payload._id);
+      const newItems = [...state.items];
+      const existingItem = newItems[existingItemIndex];
+      
+      if (existingItem.quantity === 1) {
+        return state;
+      }
+      
+      const updatedItem = {
+        ...existingItem,
+        quantity: existingItem.quantity - 1,
+      };
+      newItems[existingItemIndex] = updatedItem;
+
+      return {
         ...state,
-        items: updatedItems,
+        items: newItems,
         totalQuantity: state.totalQuantity - 1,
       };
-      console.log('Cart Reducer - State after DECREASE_QUANTITY:', updatedState);
-      return updatedState;
     }
-    default: {
-      console.log('Cart Reducer - State after default:', state);
+    default:
       return state;
-    }
   }
 };
 
-// Contextos
-const CartContext = createContext<CartState | undefined>(undefined);
-const CartDispatchContext = createContext<React.Dispatch<CartAction> | undefined>(undefined);
-
-// Tipos de propriedades do CartProvider
-interface CartProviderProps {
-  children: ReactNode;
-}
-
-export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
   return (
@@ -127,17 +102,17 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   );
 };
 
-export const useCart = (): CartState => {
+export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
 };
 
-export const useCartDispatch = (): React.Dispatch<CartAction> => {
+export const useCartDispatch = () => {
   const context = useContext(CartDispatchContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useCartDispatch must be used within a CartProvider');
   }
   return context;

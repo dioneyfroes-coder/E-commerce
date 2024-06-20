@@ -2,7 +2,7 @@
 
 import { getDatabase } from '../lib/mongodb';
 import Home from '../components/Home';
-import { Product } from '../types/product';
+import { Product } from '../types';
 
 export const revalidate = 60; // Tempo de revalidação em segundos
 

@@ -1,25 +1,22 @@
+// src/components/Cart.tsx
+
 import React from 'react';
 import { useCart, useCartDispatch } from '../context/CartContext';
+import { CartItem } from '../types';
 
 const Cart = () => {
   const { items, totalQuantity } = useCart();
   const dispatch = useCartDispatch();
 
-  console.log('Cart Component - Items:', items);
-  console.log('Cart Component - Total Quantity:', totalQuantity);
-
   const handleRemove = (_id: string) => {
-    console.log('Removing item with _id:', _id);
     dispatch({ type: 'REMOVE_ITEM', payload: { _id } });
   };
 
   const handleIncrease = (_id: string) => {
-    console.log('Increasing quantity for item with _id:', _id);
     dispatch({ type: 'INCREASE_QUANTITY', payload: { _id } });
   };
 
   const handleDecrease = (_id: string) => {
-    console.log('Decreasing quantity for item with _id:', _id);
     dispatch({ type: 'DECREASE_QUANTITY', payload: { _id } });
   };
 
@@ -30,7 +27,7 @@ const Cart = () => {
         <p>Seu carrinho está vazio</p>
       ) : (
         <ul>
-          {items.map(item => (
+          {items.map((item: CartItem) => (
             <li key={item._id}>
               <p>{item.name}</p>
               <p>${item.price.toFixed(2)}</p>

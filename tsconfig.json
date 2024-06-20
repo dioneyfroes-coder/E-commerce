@@ -27,8 +27,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "src/scripts/testConnection.js"  ],
+    ".next/types/**/*.ts",
+    "src/scripts/testConnection.js"
+  ],
   "exclude": [
     "node_modules"
   ]
