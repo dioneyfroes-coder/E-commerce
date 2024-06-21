@@ -5,9 +5,8 @@ import { Inter } from "next/font/google";
 import "../styles/reset.css";
 import "../styles/globals.css";
 import { CartProvider } from '../context/CartContext';
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import AppProviders from "../components/AppProviders";
+import Layout from "../components/Layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,12 +21,11 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <body className={inter.className}>
         <AppProviders>
           <CartProvider>
-            <Header />
-            {children}
-            <Footer />
+            <Layout>
+              {children}
+            </Layout>
           </CartProvider>
         </AppProviders>
-
       </body>
     </html>
   );

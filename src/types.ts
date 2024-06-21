@@ -6,6 +6,7 @@ export interface Product {
   description: string;
   price: number;
   category: string;
+  quantity?: number;
 }
 
 export interface CartItem extends Product {
@@ -15,4 +16,10 @@ export interface CartItem extends Product {
 export interface CartState {
   items: CartItem[];
   totalQuantity: number;
+}
+
+export interface FilterQuery {
+  category?: string;
+  minPrice?: string;
+  maxPrice?: string;
 }

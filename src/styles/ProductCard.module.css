@@ -1,0 +1,31 @@
+/* components/ProductCard.module.css */
+
+.product-card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin: 16px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .product-card h3 {
+    margin-bottom: 8px;
+  }
+  
+  .product-card p {
+    margin-bottom: 8px;
+  }
+  
+  .product-card button {
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .product-card button:hover {
+    background-color: #005bb5;
+  }
+  
