@@ -2,14 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Global Styles */
 body {
   @apply bg-gray-100 text-gray-900;
-}
-
-/* styles/globals.css */
-
-body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -25,4 +19,12 @@ header {
 
 main {
   padding: 20px;
+}
+
+.categories {
+  display: none;
+}
+
+.categories.visible {
+  display: block;
 }

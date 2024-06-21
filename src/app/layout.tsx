@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../styles/reset.css";
 import "../styles/globals.css";
-import { CartProvider } from '../context/CartContext';
 import AppProviders from "../components/AppProviders";
 import Layout from "../components/Layout";
 
@@ -20,11 +19,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     <html lang="en">
       <body className={inter.className}>
         <AppProviders>
-          <CartProvider>
             <Layout>
               {children}
             </Layout>
-          </CartProvider>
         </AppProviders>
       </body>
     </html>

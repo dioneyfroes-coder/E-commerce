@@ -1,20 +1,26 @@
-// src/components/Layout.tsx
+"use client";
 
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import { CartProvider } from '../context/CartContext';
+import { ProductsProvider } from '../context/ProductsContext';
 import Search from './Search';
 import Filter from './Filter';
+import Categories from './Categories';
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
-      <Header />
-      <Search />
-      <Filter />
-      <main>{children}</main>
-      <Footer />
-    </div>
+    <ProductsProvider>
+      <CartProvider>
+        <Header />
+        <Search />
+        <Filter />
+        <Categories />
+        <main>{children}</main>
+        <Footer />
+      </CartProvider>
+    </ProductsProvider>
   );
 };
 

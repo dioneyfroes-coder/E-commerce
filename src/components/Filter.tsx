@@ -1,41 +1,42 @@
 // src/components/Filter.tsx
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useProducts } from '../context/ProductsContext';
 
 const Filter = () => {
-  const [category, setCategory] = useState('');
-  const [priceFilter, setPriceFilter] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { products, setProducts } = useProducts();
 
-  const handleFilter = (e: React.FormEvent) => {
-    e.preventDefault();
-    let query = `/search?category=${category}`;
-    if (priceFilter) {
-      query += `&priceFilter=${priceFilter}`;
+  const handlePriceFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const priceFilter = e.target.value;
+    const currentParams = new URLSearchParams(searchParams?.toString());
+    currentParams.set('priceFilter', priceFilter);
+
+    // Update the URL with the new search parameters
+    router.push(`/search?${currentParams.toString()}`);
+
+    // Apply filter to the products in the current context
+    let filtered = [...products];
+    if (priceFilter === 'lowToHigh') {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (priceFilter === 'highToLow') {
+      filtered.sort((a, b) => b.price - a.price);
     }
-    router.push(query);
+
+    setProducts(filtered);
   };
 
   return (
-    <form onSubmit={handleFilter}>
-      <input
-        type="text"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        placeholder="Category..."
-      />
-      <select
-        value={priceFilter}
-        onChange={(e) => setPriceFilter(e.target.value)}
-      >
-        <option value="">Select Price Filter</option>
-        <option value="highest">Maior Valor</option>
-        <option value="lowest">Menor Valor</option>
+    <div>
+      <select onChange={handlePriceFilter}>
+        <option value="">Select Price</option>
+        <option value="lowToHigh">Low to High</option>
+        <option value="highToLow">High to Low</option>
       </select>
-      <button type="submit">Filter</button>
-    </form>
+    </div>
   );
 };
 

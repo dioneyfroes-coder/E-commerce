@@ -1,22 +1,17 @@
-// pages/api/categories.ts
+// src/pages/api/categories.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDatabase } from '../../lib/mongodb';
 import errorMiddleware from '../../middlewares/errorMiddleware';
 
-const categoriesHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const db = await getDatabase();
     const categories = await db.collection('products').distinct('category');
-
-    res.status(200).json({ categories });
+    res.status(200).json(categories);
   } catch (error) {
-    throw new CustomError('Failed to fetch categories', 500);
+    res.status(500).json({ error: 'Failed to fetch categories' });
   }
 };
 
-export default errorMiddleware(categoriesHandler);
+export default errorMiddleware(handler);

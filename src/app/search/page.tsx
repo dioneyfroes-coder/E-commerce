@@ -1,40 +1,49 @@
-// src/app/search/page.tsx
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useProducts } from '../../context/ProductsContext';
 import ProductCard from '../../components/ProductCard';
 import { Product } from '../../types';
 
-const fetchSearchResults = async (term: string | null, category: string | null, priceFilter: string | null) => {
-  const query = new URLSearchParams();
-  if (term) query.append('term', term);
-  if (category) query.append('category', category);
-  if (priceFilter) query.append('priceFilter', priceFilter);
-
-  const res = await fetch(`/api/search?${query.toString()}`);
-  if (!res.ok) {
-    throw new Error('Failed to fetch search results');
-  }
-  return res.json();
-};
-
-const SearchResults = async () => {
+const SearchPage = () => {
   const searchParams = useSearchParams();
-  const term = searchParams ? searchParams.get('term') : null;
-  const category = searchParams ? searchParams.get('category') : null;
-  const priceFilter = searchParams ? searchParams.get('priceFilter') : null;
+  const { products } = useProducts();
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-  const products = await fetchSearchResults(term, category, priceFilter);
+  useEffect(() => {
+    const term = searchParams?.get('term') || '';
+    const priceFilter = searchParams?.get('priceFilter') || '';
+
+    if (Array.isArray(products)) {
+      let filtered = [...products];
+
+      if (term) {
+        filtered = filtered.filter(product =>
+          product.name.toLowerCase().includes(term.toLowerCase())
+        );
+      }
+
+      if (priceFilter === 'lowToHigh') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (priceFilter === 'highToLow') {
+        filtered.sort((a, b) => b.price - a.price);
+      }
+
+      setFilteredProducts(filtered);
+    } else {
+      console.error('Unexpected data format:', products);
+    }
+  }, [searchParams, products]);
 
   return (
     <div>
-      <h2>Search Results</h2>
+      <h1>Resultados da Pesquisa</h1>
       <div>
-        {products.length === 0 ? (
-          <p>No products found</p>
+        {filteredProducts.length === 0 ? (
+          <p>Nenhum produto encontrado</p>
         ) : (
-          products.map((product: Product) => (
+          filteredProducts.map(product => (
             <ProductCard key={product._id} product={product} />
           ))
         )}
@@ -43,4 +52,4 @@ const SearchResults = async () => {
   );
 };
 
-export default SearchResults;
+export default SearchPage;
