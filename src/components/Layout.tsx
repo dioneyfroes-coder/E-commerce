@@ -8,17 +8,20 @@ import { ProductsProvider } from '../context/ProductsContext';
 import Search from './Search';
 import Filter from './Filter';
 import Categories from './Categories';
+import { OrderHistoryProvider } from '../context/OrderHistoryContext';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProductsProvider>
       <CartProvider>
-        <Header />
-        <Search />
-        <Filter />
-        <Categories />
-        <main>{children}</main>
-        <Footer />
+        <OrderHistoryProvider>
+          <Header />
+          <Search />
+          <Filter />
+          <Categories />
+          <main>{children}</main>
+          <Footer />
+        </OrderHistoryProvider>
       </CartProvider>
     </ProductsProvider>
   );

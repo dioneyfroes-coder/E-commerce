@@ -1,8 +1,8 @@
-// src/context/CartContext.tsx
 "use client";
 
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { CartState, CartItem, Product } from '../types';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { CartState, CartItem } from '../types';
 import { CartAction } from '../actions';
 
 const CartContext = createContext<CartState | undefined>(undefined);
@@ -13,12 +13,30 @@ const initialState: CartState = {
   totalQuantity: 0,
 };
 
+const loadCartFromCookies = (): CartState => {
+  try {
+    const storedCart = Cookies.get('cart');
+    return storedCart ? JSON.parse(storedCart) : initialState;
+  } catch (error) {
+    console.error("Failed to load cart from cookies", error);
+    return initialState;
+  }
+};
+
+const saveCartToCookies = (state: CartState) => {
+  try {
+    Cookies.set('cart', JSON.stringify(state), { expires: 7 }); // Expira em 7 dias
+  } catch (error) {
+    console.error("Failed to save cart to cookies", error);
+  }
+};
+
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
       const existingItemIndex = state.items.findIndex(item => item._id === action.payload._id);
       let newItems = [...state.items];
-      
+
       if (existingItemIndex !== -1) {
         const existingItem = newItems[existingItemIndex];
         const updatedItem = {
@@ -41,7 +59,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const newItems = state.items.filter(item => item._id !== action.payload._id);
       const removedItem = state.items.find(item => item._id === action.payload._id);
       const removedQuantity = removedItem ? removedItem.quantity : 0;
-      
+
       return {
         ...state,
         items: newItems,
@@ -68,11 +86,11 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const existingItemIndex = state.items.findIndex(item => item._id === action.payload._id);
       const newItems = [...state.items];
       const existingItem = newItems[existingItemIndex];
-      
+
       if (existingItem.quantity === 1) {
         return state;
       }
-      
+
       const updatedItem = {
         ...existingItem,
         quantity: existingItem.quantity - 1,
@@ -85,6 +103,9 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         totalQuantity: state.totalQuantity - 1,
       };
     }
+    case 'LOAD_CART': {
+      return action.payload;
+    }
     default:
       return state;
   }
@@ -92,6 +113,21 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const loadedCart = loadCartFromCookies();
+      dispatch({ type: 'LOAD_CART', payload: loadedCart });
+      setIsMounted(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      saveCartToCookies(state);
+    }
+  }, [state, isMounted]);
 
   return (
     <CartContext.Provider value={state}>
