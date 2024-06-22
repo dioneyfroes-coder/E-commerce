@@ -7,6 +7,22 @@ export interface Product {
   price: number;
   category: string;
   quantity?: number;
+  imageUrl: string;
+  stock: number;
+}
+
+export interface Review {
+  id?: string;
+  productId: string;
+  userId?: string;
+  rating: number;
+  comment: string;
+  name?: string;
+  date: Date;
+}
+
+export interface ProductWithReviews extends Product {
+  reviews: Review[];
 }
 
 export interface CartItem extends Product {
