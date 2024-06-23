@@ -1,6 +1,7 @@
 Feito- Implementação de Carrinho de Compras
 Feito- Permitir que os usuários adicionem produtos a um carrinho de compras
 Feito- visualizar os itens no carrinho
+Feito- consulta de cep
 Valor total da compra no carrinho
 Calculo de frete na página do produto
 Checkout da compra
@@ -10,13 +11,13 @@ Feito- Adicionar registro e login de usuários
 Feito- salvar o carrinho entre sessões
 histórico de compras.
 
- Reviews e Avaliações de Produtos
-Permitir que os usuários adicionem reviews e avaliações para produtos
+Feito- Reviews e Avaliações de Produtos
+Feio- Permitir que os usuários adicionem reviews e avaliações para produtos
 
 Feito- Página de Produto
  Página do Produto com mais detalhes
 Implementar uma página detalhada para cada produto
- mostrar reviews e opções de compra.
+opções de compra.
 
  Sistema de Pagamento
 Integrar um sistema de pagamento para permitir que os usuários façam compras diretamente no site.

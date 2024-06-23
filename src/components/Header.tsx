@@ -23,6 +23,7 @@ const Header: React.FC = () => {
         {isMounted && (
           <Link href="/cart">Carrinho ({itemCount})</Link>
         )}
+        <Link href="/cep">Consulta de CEP</Link>
         {session ? (
           <>
             <button onClick={() => signOut()} className="ml-4">

@@ -39,3 +39,39 @@ export interface FilterQuery {
   minPrice?: string;
   maxPrice?: string;
 }
+
+export interface CepData {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
+  erro?: boolean;
+}
+
+export interface PartialAddress {
+  logradouro: string;
+  bairro?: string;
+  localidade: string;
+  uf: string;
+}
+
+export interface Address {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
+  erro?: boolean;
+}
+
