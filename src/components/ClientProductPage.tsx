@@ -1,10 +1,11 @@
-// src/components/ClientProductPage.tsx
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import { useCartDispatch } from '../context/CartContext';
 import { Product } from '../types';
 import ProductReviews from './ProductReviews';
+import ShippingCalculator from './FreightCalculator';
+import FreightCalculator from './FreightCalculator';
 
 const ClientProductPage = ({ productId }: { productId: string }) => {
   const [product, setProduct] = useState<Product | null>(null);
@@ -32,6 +33,7 @@ const ClientProductPage = ({ productId }: { productId: string }) => {
       <p>{product.description}</p>
       <p>${product.price.toFixed(2)}</p>
       <button onClick={() => handleAddToCart(product)}>Adicionar ao Carrinho</button>
+      <FreightCalculator pageType="product"/>
       <ProductReviews productId={productId} />
     </div>
   );

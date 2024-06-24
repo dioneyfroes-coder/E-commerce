@@ -9,6 +9,10 @@ export interface Product {
   quantity?: number;
   imageUrl: string;
   stock: number;
+  peso: number; 
+  altura: number; 
+  largura: number; 
+  comprimento: number; 
 }
 
 export interface Review {
@@ -64,14 +68,28 @@ export interface PartialAddress {
 export interface Address {
   cep: string;
   logradouro: string;
-  complemento: string;
-  bairro: string;
+  complemento?: string;
+  bairro?: string;
   localidade: string;
   uf: string;
-  ibge: string;
-  gia: string;
-  ddd: string;
-  siafi: string;
+  ibge?: string;
+  gia?: string;
+  ddd?: string;
+  siafi?: string;
   erro?: boolean;
 }
 
+export interface AddressLookupData {
+  cep: string;
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+}
+
+export interface FreightData {
+  valor: string;
+  prazo: string;
+  erro?: string;
+  mensagemErro?: string;
+}

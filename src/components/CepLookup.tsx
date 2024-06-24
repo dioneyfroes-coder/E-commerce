@@ -1,13 +1,15 @@
+// src/components/CepLookup.tsx
+
 "use client";
 
 import React, { useState } from 'react';
 import axios from 'axios';
 import AddressLookup from './AddressLookup';
-import { Address } from '../types';
+import { CepData } from '../types';
 
 const CepLookup: React.FC = () => {
   const [cep, setCep] = useState<string>('');
-  const [address, setAddress] = useState<Address | null>(null);
+  const [address, setAddress] = useState<CepData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAddressLookup, setShowAddressLookup] = useState<boolean>(false);
 
@@ -19,7 +21,7 @@ const CepLookup: React.FC = () => {
     e.preventDefault();
     try {
       setError(null);
-      const response = await axios.get<Address>(`https://viacep.com.br/ws/${cep}/json/`);
+      const response = await axios.get<CepData>(`/api/cep?cep=${cep}`);
       if (response.data.erro) {
         setError('CEP não encontrado');
         setAddress(null);
@@ -27,6 +29,7 @@ const CepLookup: React.FC = () => {
         setAddress(response.data);
       }
     } catch (error) {
+      console.error('Erro ao consultar CEP:', error);
       setError('Erro ao consultar CEP');
       setAddress(null);
     }

@@ -1,3 +1,5 @@
+// src//context/CartContext.tsx
+
 "use client";
 
 import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
@@ -5,8 +7,8 @@ import Cookies from 'js-cookie';
 import { CartState, CartItem } from '../types';
 import { CartAction } from '../actions';
 
-const CartContext = createContext<CartState | undefined>(undefined);
-const CartDispatchContext = createContext<React.Dispatch<CartAction> | undefined>(undefined);
+export const CartContext = createContext<CartState | undefined>(undefined);
+export const CartDispatchContext = createContext<React.Dispatch<CartAction> | undefined>(undefined);
 
 const initialState: CartState = {
   items: [],

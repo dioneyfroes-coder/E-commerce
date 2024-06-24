@@ -1,42 +1,36 @@
+// src/components/AddressLookup.tsx
+
+"use client";
+
 import React, { useState } from 'react';
 import axios from 'axios';
-import { PartialAddress, Address } from '../types';
+import { AddressLookupData } from '../types';
 
 const AddressLookup: React.FC = () => {
-  const [address, setAddress] = useState<PartialAddress>({
-    logradouro: '',
-    localidade: '',
-    uf: '',
-    bairro: '',
-  });
-  const [cep, setCep] = useState<string | null>(null);
+  const [uf, setUf] = useState<string>('');
+  const [cidade, setCidade] = useState<string>('');
+  const [logradouro, setLogradouro] = useState<string>('');
+  const [cepData, setCepData] = useState<AddressLookupData[]>([]);
   const [error, setError] = useState<string | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress({
-      ...address,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setError(null);
-      const { logradouro, bairro, localidade, uf } = address;
-      const response = await axios.get<Address[]>(
-        `/api/lookup-address?uf=${uf}&localidade=${localidade}&logradouro=${logradouro}${bairro ? `&bairro=${bairro}` : ''}`
+      const response = await axios.get<AddressLookupData[]>(
+        `/api/address?uf=${uf}&cidade=${cidade}&logradouro=${logradouro}`
       );
-
-      if (response.data.length === 0 || response.data[0].erro) {
-        setError('Endereço não encontrado');
-        setCep(null);
+      console.log('Received data:', response.data); // Adicionado para logar os dados recebidos
+      if (response.data.length === 0) {
+        setError('Nenhum endereço encontrado.');
+        setCepData([]);
       } else {
-        setCep(response.data[0].cep);
+        setCepData(response.data);
       }
     } catch (error) {
-      setError('Erro ao consultar endereço');
-      setCep(null);
+      console.error('Erro ao consultar o endereço:', error);
+      setError('Erro ao consultar o endereço. Verifique os dados e tente novamente.');
+      setCepData([]);
     }
   };
 
@@ -45,52 +39,51 @@ const AddressLookup: React.FC = () => {
       <h2>Consulta de Endereço</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          Logradouro:
-          <input
-            type="text"
-            name="logradouro"
-            value={address.logradouro}
-            onChange={handleChange}
-            required
-            placeholder="Ex: Avenida Paulista"
-          />
-        </label>
-        <label>
-          Bairro:
-          <input
-            type="text"
-            name="bairro"
-            value={address.bairro || ''}
-            onChange={handleChange}
-            placeholder="Ex: Bela Vista"
-          />
-        </label>
-        <label>
-          Localidade (Cidade):
-          <input
-            type="text"
-            name="localidade"
-            value={address.localidade}
-            onChange={handleChange}
-            required
-            placeholder="Ex: São Paulo"
-          />
-        </label>
-        <label>
           UF:
           <input
             type="text"
-            name="uf"
-            value={address.uf}
-            onChange={handleChange}
-            required
+            value={uf}
+            onChange={(e) => setUf(e.target.value)}
             placeholder="Ex: SP"
+          />
+        </label>
+        <label>
+          Cidade:
+          <input
+            type="text"
+            value={cidade}
+            onChange={(e) => setCidade(e.target.value)}
+            placeholder="Ex: Sao Paulo"
+          />
+        </label>
+        <label>
+          Logradouro:
+          <input
+            type="text"
+            value={logradouro}
+            onChange={(e) => setLogradouro(e.target.value)}
+            placeholder="Ex: Avenida Paulista"
           />
         </label>
         <button type="submit">Consultar</button>
       </form>
       {error && <p>{error}</p>}
-      {cep && <p>CEP: {cep}</p>}
+      {cepData.length > 0 && (
+        <div>
+          <h3>Resultados:</h3>
+          <ul>
+            {cepData.map((data, index) => (
+              <li key={`${data.cep}-${index}`}>
+                <p>CEP: {data.cep}</p>
+                <p>Logradouro: {data.logradouro}</p>
+                <p>Bairro: {data.bairro}</p>
+                <p>Localidade: {data.localidade}</p>
+                <p>UF: {data.uf}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

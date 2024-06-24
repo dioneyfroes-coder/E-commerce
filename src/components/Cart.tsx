@@ -3,6 +3,7 @@
 import React from 'react';
 import { useCart, useCartDispatch } from '../context/CartContext';
 import { CartItem } from '../types';
+import FreightCalculator from './FreightCalculator';
 
 const Cart = () => {
   const { items, totalQuantity } = useCart();
@@ -42,6 +43,7 @@ const Cart = () => {
       <div>
         <h3>Total de Itens no Carrinho: {totalQuantity}</h3>
       </div>
+      <FreightCalculator pageType="cart"/>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+// src/context/ProductsContext.tsx
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -10,7 +12,7 @@ interface ProductsContextProps {
   clearFilter: () => void;
 }
 
-const ProductsContext = createContext<ProductsContextProps | undefined>(undefined);
+export const ProductsContext = createContext<ProductsContextProps | undefined>(undefined);
 
 export const useProducts = () => {
   const context = useContext(ProductsContext);
