@@ -4,8 +4,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../styles/reset.css";
 import "../styles/globals.css";
-import AppProviders from "../components/AppProviders";
 import Layout from "../components/Layout";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs';
+import { ptBR } from "@clerk/localizations";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,14 +23,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AppProviders>
-            <Layout>
-              {children}
-            </Layout>
-        </AppProviders>
-      </body>
-    </html>
+    <ClerkProvider localization={ptBR}>
+      <html lang="ptBR">
+        <body className={inter.className}>
+          <Layout>
+            {children}
+          </Layout>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 };

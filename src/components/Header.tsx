@@ -3,13 +3,15 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { signOut, useSession } from 'next-auth/react';
+import { useUser, SignOutButton, SignIn, SignUp, SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/nextjs';
 
 const Header: React.FC = () => {
   const { items } = useCart();
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const { data: session } = useSession();
+  const { isSignedIn, user } = useUser();
   const [isMounted, setIsMounted] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -24,16 +26,18 @@ const Header: React.FC = () => {
           <Link href="/cart">Carrinho ({itemCount})</Link>
         )}
         <Link href="/cep">Consulta de CEP</Link>
-        {session ? (
-          <>
-            <button onClick={() => signOut()} className="ml-4">
-              Logout
+        <div className='flx itens-center gap-8'>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode='modal'>
+            <button className='border roudend-md border-gray-400 px-3 py-2'>
+              Fazer Login
             </button>
-            <span className="ml-4">Welcome, {session.user?.email}</span>
-          </>
-        ) : (
-          <Link href="/auth/signin" className="ml-4">Login</Link>
-        )}
+            </SignInButton>
+          </SignedOut>
+        </div>
       </nav>
     </header>
   );
