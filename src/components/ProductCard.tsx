@@ -1,3 +1,5 @@
+// src/components/ProductCard.tsx
+
 import React from 'react';
 import Link from 'next/link';
 import { ProductType } from '../types';
@@ -9,10 +11,17 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const dispatch = useCartStore((state) => state.dispatch);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const handleAddToCart = () => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
+    addToCart({
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      description: product.description || "",
+      currency: 'BRL'
+    });
   };
 
   return (

@@ -1,11 +1,20 @@
+// src/components/CartPage.tsx
 "use client";
 
 import React from 'react';
 import { useCartStore } from '../../store';
 import { formatCurrencyString } from 'use-shopping-cart';
 import { useAuth } from '@clerk/nextjs';
+import { Product } from '../../types';
 
-const CartItem = ({ item, decrementItem, incrementItem, removeFromCart }) => (
+interface CartItemProps {
+  item: Product;
+  decrementItem: (id: string) => void;
+  incrementItem: (id: string) => void;
+  removeFromCart: (id: string) => void;
+}
+
+const CartItem: React.FC<CartItemProps> = ({ item, decrementItem, incrementItem, removeFromCart }) => (
   <div className="flex items-center justify-between p-4 border-b">
     <div className="flex items-center">
       <img src={item.imageUrl} alt={item.name} className="w-20 h-20 object-cover mr-4" />
@@ -26,10 +35,10 @@ const CartItem = ({ item, decrementItem, incrementItem, removeFromCart }) => (
 );
 
 const CartPage: React.FC = () => {
-  const { cart, dispatch } = useCartStore();
+  const { cart, removeFromCart, incrementItem, decrementItem } = useCartStore();
   const { isSignedIn } = useAuth();
 
-  const totalPrice = cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
+  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleCheckout = async () => {
     const response = await fetch('/api/checkout', {
@@ -42,10 +51,6 @@ const CartPage: React.FC = () => {
     const data = await response.json();
     window.location.href = data.url;
   };
-
-  const removeFromCart = (_id: string) => dispatch({ type: 'REMOVE_ITEM', payload: { _id } });
-  const incrementItem = (_id: string) => dispatch({ type: 'INCREASE_QUANTITY', payload: { _id } });
-  const decrementItem = (_id: string) => dispatch({ type: 'DECREASE_QUANTITY', payload: { _id } });
 
   return (
     <div className="container mx-auto p-4">

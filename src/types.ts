@@ -4,7 +4,7 @@ export interface ProductType {
   name: string;
   quantity?: number;
   imageUrl: string;
-  description?: string | null;
+  description?: string;
   currency?: string;
   category?: string;
   stock?: number;
