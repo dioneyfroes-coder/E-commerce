@@ -1,23 +1,22 @@
-//src/app/page.tsx
+// src/app/page.tsx
 
-import { getDatabase } from '../lib/mongodb';
 import Home from '../components/Home';
-import { Product } from '../types';
+import { ProductType } from '../types';
+import { getStripeProducts } from '../lib/stripe';
 
 export const revalidate = 60; // Tempo de revalidação em segundos
 
 export default async function Page() {
-  const db = await getDatabase();
-  const products = await db.collection('products').find().toArray();
+  const products = await getStripeProducts();
 
-  const productsFormatted = products.map((product) => ({
-    id: product._id.toString(),
+  const productsFormatted: ProductType[] = products.map((product) => ({
+    _id: product.id,
     name: product.name,
     description: product.description,
     price: product.price,
-    category: product.category,
+    category: "",
     imageUrl: product.imageUrl,
-    stock: product.stock,
+    stock: 1,
   }));
 
   return <Home products={productsFormatted} />;

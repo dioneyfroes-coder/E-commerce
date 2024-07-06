@@ -2,7 +2,6 @@
 
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { CartContext } from '../context/CartContext';
 import { FreightData } from '../types';
 
 const FreightCalculator: React.FC = () => {

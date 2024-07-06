@@ -3,7 +3,6 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import { CartProvider } from '../context/CartContext';
 import { ProductsProvider } from '../context/ProductsContext';
 import Search from './Search';
 import Filter from './Filter';
@@ -14,7 +13,6 @@ import { ReviewsContextProvider } from '../context/ReviewsContext';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProductsProvider>
-      <CartProvider>
         <OrderHistoryProvider>
         <ReviewsContextProvider>
           <Header />
@@ -25,7 +23,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Footer />
           </ReviewsContextProvider>
         </OrderHistoryProvider>
-      </CartProvider>
     </ProductsProvider>
   );
 };

@@ -1,18 +1,13 @@
-// src/types.ts
-
-export interface Product {
+export interface ProductType {
   _id: string;
-  name: string;
-  description: string;
   price: number;
-  category: string;
+  name: string;
   quantity?: number;
   imageUrl: string;
-  stock: number;
-  peso: number; 
-  altura: number; 
-  largura: number; 
-  comprimento: number; 
+  description?: string | null;
+  currency?: string;
+  category?: string;
+  stock?: number;
 }
 
 export interface Review {
@@ -25,17 +20,8 @@ export interface Review {
   date: Date;
 }
 
-export interface ProductWithReviews extends Product {
+export interface ProductWithReviews extends ProductType {
   reviews: Review[];
-}
-
-export interface CartItem extends Product {
-  quantity: number;
-}
-
-export interface CartState {
-  items: CartItem[];
-  totalQuantity: number;
 }
 
 export interface FilterQuery {
@@ -92,4 +78,20 @@ export interface FreightData {
   prazo: string;
   erro?: string;
   mensagemErro?: string;
+}
+
+export interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+  quantity: number;
+}
+
+export interface CartState {
+  cart: Product[];
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: string) => void;
+  incrementItem: (productId: string) => void;
+  decrementItem: (productId: string) => void;
 }

@@ -1,39 +1,47 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useCartDispatch } from '../context/CartContext';
-import { Product } from '../types';
+import { ProductType } from '../types';
 import ProductReviews from './ProductReviews';
-import ShippingCalculator from './FreightCalculator';
 import FreightCalculator from './FreightCalculator';
+import { useShoppingCart, formatCurrencyString } from 'use-shopping-cart';
 
 const ClientProductPage = ({ productId }: { productId: string }) => {
-  const [product, setProduct] = useState<Product | null>(null);
-  const dispatch = useCartDispatch();
+  const [product, setProduct] = useState<ProductType | null>(null);
+  const { addItem } = useShoppingCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await fetch(`/api/products/${productId}`);
-      const data: Product = await response.json();
+      const data: ProductType = await response.json();
       setProduct(data);
     };
 
     fetchProduct();
   }, [productId]);
 
-  const handleAddToCart = (product: Product) => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
-  };
-
   if (!product) return <div>Carregando...</div>;
 
   return (
     <div>
       <h1>{product.name}</h1>
+      <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover mb-4 rounded-lg" />
       <p>{product.description}</p>
-      <p>${product.price.toFixed(2)}</p>
-      <button onClick={() => handleAddToCart(product)}>Adicionar ao Carrinho</button>
-      <FreightCalculator pageType="product"/>
+      <p>
+        {formatCurrencyString({
+          value: product.price,
+          currency: 'BRL',
+          language: 'pt-BR',
+        })}
+      </p>
+      <button onClick={() => addItem({
+        id: product._id,
+        name: product.name,
+        price: product.price ,
+        currency: 'BRL',
+        imageUrl: product.imageUrl,
+      })}>Adicionar ao Carrinho</button>
+      <FreightCalculator pageType="product" />
       <ProductReviews productId={productId} />
     </div>
   );

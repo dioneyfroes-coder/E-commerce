@@ -1,11 +1,21 @@
-// src/models/User.ts (Se estiver utilizando Mongoose)
-import mongoose from 'mongoose';
+// src/models/User.ts
 
-const userSchema = new mongoose.Schema({
+import mongoose, { Document, Model, Schema } from 'mongoose';
+
+interface IUser extends Document {
+  clerkId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+const UserSchema: Schema = new Schema({
+  clerkId: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  firstName: { type: String },
+  lastName: { type: String },
 });
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export default User;
