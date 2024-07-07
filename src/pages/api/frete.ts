@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const freightPromises = items.map(item => {
-      const url = `https://www.cepcerto.com/ws/json-frete/${cepOrigem}/${cepDestino}/${item.peso}/${item.altura}/${item.largura}/${item.comprimento}/${apiKey}`;
+      const url = `https://www.cepcerto.com/ws/json-frete/${cepOrigem}/${cepDestino}/${item.weight}/${item.height}/${item.width}/${item.length}/${apiKey}`;
       return axios.get(url);
     });
 

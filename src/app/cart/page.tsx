@@ -6,6 +6,7 @@ import { useCartStore } from '../../store';
 import { formatCurrencyString } from 'use-shopping-cart';
 import { useAuth } from '@clerk/nextjs';
 import { Product } from '../../types';
+import FreightCalculator from '../../components/FreightCalculator';
 
 interface CartItemProps {
   item: Product;
@@ -68,6 +69,7 @@ const CartPage: React.FC = () => {
           />
         ))
       )}
+      <FreightCalculator />
       <h2 className="text-xl font-bold mt-4">
         Total: {formatCurrencyString({ value: totalPrice, currency: 'BRL', language: 'pt-BR' })}
       </h2>

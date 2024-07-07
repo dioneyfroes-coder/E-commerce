@@ -95,3 +95,15 @@ export interface CartState {
   incrementItem: (productId: string) => void;
   decrementItem: (productId: string) => void;
 }
+
+export interface CartItem {
+  _id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+  weight: number;
+  height: number;
+  width: number;
+  length: number;
+}

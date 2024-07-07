@@ -1,11 +1,11 @@
 // src/components/FreightCalculator.tsx
-
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { FreightData } from '../types';
+import { useCartStore } from '../store';
 
 const FreightCalculator: React.FC = () => {
-  const cartContext = useContext(CartContext);
+  const { cart } = useCartStore();
   const [cepDestino, setCepDestino] = useState<string>('');
   const [freightData, setFreightData] = useState<FreightData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +16,7 @@ const FreightCalculator: React.FC = () => {
       return;
     }
 
-    if (!cartContext || cartContext.items.length === 0) {
+    if (cart.length === 0) {
       setError('O carrinho está vazio');
       return;
     }
@@ -24,7 +24,7 @@ const FreightCalculator: React.FC = () => {
     try {
       const response = await axios.post('/api/frete', {
         cepDestino,
-        items: cartContext.items,
+        items: cart,
       });
 
       if (response.data) {

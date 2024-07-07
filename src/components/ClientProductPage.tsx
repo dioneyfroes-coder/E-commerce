@@ -1,20 +1,35 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ProductType } from '../types';
+import { formatCurrencyString } from 'use-shopping-cart';
+import { useCartStore } from '../store';
 import ProductReviews from './ProductReviews';
-import FreightCalculator from './FreightCalculator';
-import { useShoppingCart, formatCurrencyString } from 'use-shopping-cart';
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  images: string[];
+  price: number;
+  currency: string;
+}
 
 const ClientProductPage = ({ productId }: { productId: string }) => {
-  const [product, setProduct] = useState<ProductType | null>(null);
-  const { addItem } = useShoppingCart();
+  const [product, setProduct] = useState<Product | null>(null);
+  const { addToCart } = useCartStore();
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await fetch(`/api/products/${productId}`);
-      const data: ProductType = await response.json();
-      setProduct(data);
+      const response = await fetch(`/api/stripe/products/${productId}`);
+      const data = await response.json();
+      setProduct({
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        images: data.images,
+        price: data.price,
+        currency: data.currency.toUpperCase(),
+      });
     };
 
     fetchProduct();
@@ -25,23 +40,25 @@ const ClientProductPage = ({ productId }: { productId: string }) => {
   return (
     <div>
       <h1>{product.name}</h1>
-      <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover mb-4 rounded-lg" />
+      <img src={product.images[0]} alt={product.name} className="w-full h-48 object-cover mb-4 rounded-lg" />
       <p>{product.description}</p>
       <p>
         {formatCurrencyString({
           value: product.price,
-          currency: 'BRL',
+          currency: product.currency,
           language: 'pt-BR',
         })}
       </p>
-      <button onClick={() => addItem({
-        id: product._id,
+      <button onClick={() => addToCart({
+        _id: product.id,
         name: product.name,
-        price: product.price ,
-        currency: 'BRL',
-        imageUrl: product.imageUrl,
-      })}>Adicionar ao Carrinho</button>
-      <FreightCalculator pageType="product" />
+        price: product.price,
+        imageUrl: product.images[0],
+        description: product.description || "",
+        currency: product.currency,
+      })} className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+        Adicionar ao Carrinho
+      </button>
       <ProductReviews productId={productId} />
     </div>
   );
