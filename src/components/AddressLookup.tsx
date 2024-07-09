@@ -6,7 +6,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { AddressLookupData } from '../types';
 
-const AddressLookup: React.FC = () => {
+interface AddressLookupProps {
+  onAddressUpdate: (address: AddressLookupData) => void;
+}
+
+const AddressLookup: React.FC<AddressLookupProps> = ({ onAddressUpdate }) => {
   const [uf, setUf] = useState<string>('');
   const [cidade, setCidade] = useState<string>('');
   const [logradouro, setLogradouro] = useState<string>('');
@@ -20,12 +24,13 @@ const AddressLookup: React.FC = () => {
       const response = await axios.get<AddressLookupData[]>(
         `/api/address?uf=${uf}&cidade=${cidade}&logradouro=${logradouro}`
       );
-      console.log('Received data:', response.data); // Adicionado para logar os dados recebidos
+      console.log('Received data:', response.data);
       if (response.data.length === 0) {
         setError('Nenhum endereço encontrado.');
         setCepData([]);
       } else {
         setCepData(response.data);
+        onAddressUpdate(response.data[0]);
       }
     } catch (error) {
       console.error('Erro ao consultar o endereço:', error);

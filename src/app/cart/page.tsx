@@ -5,8 +5,8 @@ import React from 'react';
 import { useCartStore } from '../../store';
 import { formatCurrencyString } from 'use-shopping-cart';
 import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { Product } from '../../types';
-import FreightCalculator from '../../components/FreightCalculator';
 
 interface CartItemProps {
   item: Product;
@@ -38,19 +38,12 @@ const CartItem: React.FC<CartItemProps> = ({ item, decrementItem, incrementItem,
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, incrementItem, decrementItem } = useCartStore();
   const { isSignedIn } = useAuth();
+  const router = useRouter();
 
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  const handleCheckout = async () => {
-    const response = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ cartItems: cart }),
-    });
-    const data = await response.json();
-    window.location.href = data.url;
+  const handleCheckout = () => {
+    router.push('/checkout');
   };
 
   return (
@@ -69,16 +62,15 @@ const CartPage: React.FC = () => {
           />
         ))
       )}
-      <FreightCalculator />
       <h2 className="text-xl font-bold mt-4">
         Total: {formatCurrencyString({ value: totalPrice, currency: 'BRL', language: 'pt-BR' })}
       </h2>
       {isSignedIn ? (
         <button onClick={handleCheckout} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
-          Finalizar Compra
+          Continuar para o Checkout
         </button>
       ) : (
-        <p className="mt-4">Faça login para finalizar a compra.</p>
+        <p className="mt-4">Faça login para continuar para o checkout.</p>
       )}
     </div>
   );

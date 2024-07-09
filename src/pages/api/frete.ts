@@ -51,7 +51,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(200).json({ valor: totalFreightValue.toFixed(2), prazo: maxDeliveryTime.toString() });
   } catch (error) {
     console.error('Error fetching freight data:', error instanceof Error ? error.message : String(error));
-    res.status(500).json({ error: 'Failed to calculate freight' });
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to calculate freight',
+      valor: '15.00',
+      prazo: '20'
+    });
   }
 };
 

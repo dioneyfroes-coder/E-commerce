@@ -7,7 +7,8 @@ export type CartAction =
   | { type: 'REMOVE_ITEM'; payload: { _id: string } }
   | { type: 'INCREASE_QUANTITY'; payload: { _id: string } }
   | { type: 'DECREASE_QUANTITY'; payload: { _id: string } }
-  | { type: 'LOAD_CART'; payload: CartState };  // New action type for loading cart
+  | { type: 'LOAD_CART'; payload: CartState }
+  | { type: 'CLEAR_CART' };  // New action type for clearing the cart
 
 export const addToCart = (product: Product): CartAction => ({
   type: 'ADD_ITEM',
@@ -27,4 +28,8 @@ export const incrementItem = (_id: string): CartAction => ({
 export const decrementItem = (_id: string): CartAction => ({
   type: 'DECREASE_QUANTITY',
   payload: { _id },
+});
+
+export const clearCart = (): CartAction => ({
+  type: 'CLEAR_CART',
 });

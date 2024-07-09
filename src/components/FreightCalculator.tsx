@@ -1,10 +1,13 @@
-// src/components/FreightCalculator.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FreightData } from '../types';
 import { useCartStore } from '../store';
 
-const FreightCalculator: React.FC = () => {
+interface FreightCalculatorProps {
+  onCalculate: (cost: number, time: number) => void;
+}
+
+const FreightCalculator: React.FC<FreightCalculatorProps> = ({ onCalculate }) => {
   const { cart } = useCartStore();
   const [cepDestino, setCepDestino] = useState<string>('');
   const [freightData, setFreightData] = useState<FreightData | null>(null);
@@ -29,6 +32,7 @@ const FreightCalculator: React.FC = () => {
 
       if (response.data) {
         setFreightData(response.data);
+        onCalculate(response.data.valor, response.data.prazo);
         setError(null);
       } else {
         setError('Não foi possível calcular o frete. Verifique os dados informados.');

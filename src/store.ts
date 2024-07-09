@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartState, Product } from './types';
-import { CartAction, addToCart, removeFromCart, incrementItem, decrementItem } from './actions';
+import { CartAction, addToCart, removeFromCart, incrementItem, decrementItem, clearCart } from './actions';
 
 const initialState: CartState = {
   cart: [],
@@ -58,6 +58,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       };
     case 'LOAD_CART':
       return { ...state, cart: action.payload.cart };
+    case 'CLEAR_CART':
+      return { ...state, cart: [] };
     default:
       return state;
   }
@@ -72,6 +74,7 @@ export const useCartStore = create<CartState>()(
       removeFromCart: (_id: string) => set(state => cartReducer(state, removeFromCart(_id))),
       incrementItem: (_id: string) => set(state => cartReducer(state, incrementItem(_id))),
       decrementItem: (_id: string) => set(state => cartReducer(state, decrementItem(_id))),
+      clearCart: () => set(state => cartReducer(state, clearCart())),
     }),
     { name: 'cart-storage' }
   )

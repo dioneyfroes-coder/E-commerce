@@ -1,5 +1,3 @@
-// src/components/CepLookup.tsx
-
 "use client";
 
 import React, { useState } from 'react';
@@ -7,7 +5,11 @@ import axios from 'axios';
 import AddressLookup from './AddressLookup';
 import { CepData } from '../types';
 
-const CepLookup: React.FC = () => {
+interface CepLookupProps {
+  onAddressFound: (address: CepData) => void;
+}
+
+const CepLookup: React.FC<CepLookupProps> = ({ onAddressFound }) => {
   const [cep, setCep] = useState<string>('');
   const [address, setAddress] = useState<CepData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +29,7 @@ const CepLookup: React.FC = () => {
         setAddress(null);
       } else {
         setAddress(response.data);
+        onAddressFound(response.data);
       }
     } catch (error) {
       console.error('Erro ao consultar CEP:', error);

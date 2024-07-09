@@ -2,6 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { clearCart } from '../../actions';
+
+clearCart();
 
 const SuccessPage: React.FC = () => {
   return (
