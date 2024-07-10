@@ -21,16 +21,6 @@ main {
   padding: 20px;
 }
 
-.categories {
-  display: none;
-}
-
-.categories.visible {
-  display: block;
-}
-
-/* src/styles/globals.css */
-
 .modal {
   display: flex;
   position: fixed;

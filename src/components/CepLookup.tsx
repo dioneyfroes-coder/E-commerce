@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import axios from 'axios';
-import AddressLookup from './AddressLookup';
 import { CepData } from '../types';
 
 interface CepLookupProps {
@@ -10,64 +8,39 @@ interface CepLookupProps {
 }
 
 const CepLookup: React.FC<CepLookupProps> = ({ onAddressFound }) => {
-  const [cep, setCep] = useState<string>('');
-  const [address, setAddress] = useState<CepData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [showAddressLookup, setShowAddressLookup] = useState<boolean>(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCep(e.target.value);
-  };
+  const [cep, setCep] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setError(null);
-      const response = await axios.get<CepData>(`/api/cep?cep=${cep}`);
-      if (response.data.erro) {
+      const response = await fetch(`/api/cep?cep=${cep}`);
+      const data: CepData = await response.json();
+      if (data.error) {
         setError('CEP não encontrado');
-        setAddress(null);
       } else {
-        setAddress(response.data);
-        onAddressFound(response.data);
+        setError('');
+        onAddressFound(data);
       }
     } catch (error) {
-      console.error('Erro ao consultar CEP:', error);
-      setError('Erro ao consultar CEP');
-      setAddress(null);
+      setError('Erro ao consultar o CEP');
     }
   };
 
-  const toggleAddressLookup = () => {
-    setShowAddressLookup(!showAddressLookup);
-  };
-
   return (
-    <div>
-      <h2>Consulta de CEP</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          CEP:
-          <input type="text" value={cep} onChange={handleChange} />
-        </label>
-        <button type="submit">Consultar</button>
-      </form>
-      <button onClick={toggleAddressLookup}>
-        {showAddressLookup ? 'Fechar' : 'Não sei meu CEP'}
-      </button>
+    <form onSubmit={handleSubmit}>
+      <label>
+        CEP:
+        <input
+          type="text"
+          value={cep}
+          onChange={(e) => setCep(e.target.value)}
+          required
+        />
+      </label>
+      <button type="submit">Consultar</button>
       {error && <p>{error}</p>}
-      {address && (
-        <div>
-          <p>CEP: {address.cep}</p>
-          <p>Logradouro: {address.logradouro}</p>
-          <p>Complemento: {address.complemento}</p>
-          <p>Bairro: {address.bairro}</p>
-          <p>Localidade: {address.localidade}</p>
-          <p>UF: {address.uf}</p>
-        </div>
-      )}
-      {showAddressLookup && <AddressLookup />}
-    </div>
+    </form>
   );
 };
 

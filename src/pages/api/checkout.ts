@@ -2,7 +2,6 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
-import axios from 'axios';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-04-10',
@@ -13,15 +12,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { userId, cartItems, shippingDetails } = req.body;
 
     try {
-      // Chama a API de createOrder para criar o pedido no banco de dados
-      const orderResponse = await axios.post(`${req.headers.origin}/api/createOrder`, {
-        userId,
-        cartItems,
-        shippingDetails,
-      });
-
-      const { orderId } = orderResponse.data;
-
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: cartItems.map((item: any) => ({
@@ -35,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           quantity: item.quantity,
         })),
         mode: 'payment',
-        success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
+        success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/cancel`,
       });
 

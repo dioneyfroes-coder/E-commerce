@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useCartStore } from '../../store';
-import FreightCalculator from '../../components/FreightCalculator';
 import CepLookup from '../../components/CepLookup';
 import { CepData } from '../../types';
 import { formatCurrencyString } from 'use-shopping-cart';
@@ -23,11 +22,6 @@ const CheckoutPage: React.FC = () => {
   const [rg, setRg] = useState('');
   const [cpf, setCpf] = useState('');
   const [errors, setErrors] = useState({ rg: '', cpf: '' });
-
-  const handleFreightCalculate = (cost: number, time: number) => {
-    setFreightCost(cost);
-    setDeliveryTime(time);
-  };
 
   const handleAddressFound = (address: CepData) => {
     setAddress(address);
@@ -147,8 +141,6 @@ const CheckoutPage: React.FC = () => {
           <span className="px-4">{item.quantity}</span>
         </div>
       ))}
-
-      <FreightCalculator onCalculate={handleFreightCalculate} />
 
       <h2 className="text-xl font-bold mt-4">
         Total: {formatCurrencyString({ value: totalPrice, currency: 'BRL', language: 'pt-BR' })}

@@ -41,7 +41,7 @@ export interface CepData {
   gia: string;
   ddd: string;
   siafi: string;
-  erro?: boolean;
+  error?: boolean;
 }
 
 export interface PartialAddress {
@@ -63,21 +63,6 @@ export interface Address {
   ddd?: string;
   siafi?: string;
   erro?: boolean;
-}
-
-export interface AddressLookupData {
-  cep: string;
-  logradouro: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
-}
-
-export interface FreightData {
-  valor: string;
-  prazo: string;
-  erro?: string;
-  mensagemErro?: string;
 }
 
 export interface Product {

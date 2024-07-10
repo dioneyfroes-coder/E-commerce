@@ -12,7 +12,7 @@ export default async function Page() {
   const productsFormatted: ProductType[] = products.map((product) => ({
     _id: product.id,
     name: product.name,
-    description: product.description,
+    description: product.description || "", // Garante que description seja uma string
     price: product.price,
     category: "",
     imageUrl: product.imageUrl,
