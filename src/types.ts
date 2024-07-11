@@ -38,6 +38,7 @@ export interface CartState {
   removeFromCart: (productId: string) => void;
   incrementItem: (productId: string) => void;
   decrementItem: (productId: string) => void;
+  clearCart: () => void;
 }
 
 export interface CartItem {

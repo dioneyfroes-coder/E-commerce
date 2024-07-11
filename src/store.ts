@@ -7,18 +7,11 @@ import { CartAction, addToCart, removeFromCart, incrementItem, decrementItem, cl
 
 const initialState: CartState = {
   cart: [],
-  addToCart: function (product: Product): void {
-    throw new Error('Function not implemented.');
-  },
-  removeFromCart: function (productId: string): void {
-    throw new Error('Function not implemented.');
-  },
-  incrementItem: function (productId: string): void {
-    throw new Error('Function not implemented.');
-  },
-  decrementItem: function (productId: string): void {
-    throw new Error('Function not implemented.');
-  }
+  addToCart: (product: Product) => {}, // Função inicial vazia
+  removeFromCart: (productId: string) => {}, // Função inicial vazia
+  incrementItem: (productId: string) => {}, // Função inicial vazia
+  decrementItem: (productId: string) => {}, // Função inicial vazia
+  clearCart: () => {} // Função inicial vazia
 };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
