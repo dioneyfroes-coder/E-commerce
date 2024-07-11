@@ -1,7 +1,11 @@
 import Stripe from 'stripe';
 
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('A chave secreta do Stripe não foi definida');
+}
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2022-11-15',
+  apiVersion: '2024-04-10',
 });
 
 export async function getStripeProducts() {
