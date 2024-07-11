@@ -8,7 +8,6 @@ import CepLookup from '../../components/CepLookup';
 import { CepData } from '../../types';
 import { formatCurrencyString } from 'use-shopping-cart';
 import { loadStripe } from '@stripe/stripe-js';
-import CheckoutButton from '../../components/CheckoutButton';
 import { validateRG, validateCPF } from '../../utils/validate';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
@@ -16,8 +15,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 const CheckoutPage: React.FC = () => {
   const { user } = useUser();
   const { cart } = useCartStore();
-  const [freightCost, setFreightCost] = useState(0);
-  const [deliveryTime, setDeliveryTime] = useState(0);
+  const [freightCost, ] = useState(0);
   const [address, setAddress] = useState<CepData | null>(null);
   const [rg, setRg] = useState('');
   const [cpf, setCpf] = useState('');
@@ -115,17 +113,6 @@ const CheckoutPage: React.FC = () => {
 
       <h2 className="text-xl font-semibold mb-4">Endereço</h2>
       <CepLookup onAddressFound={handleAddressFound} />
-      {address && (
-        <div>
-          <p>CEP: {address.cep}</p>
-          <p>Logradouro: {address.logradouro}</p>
-          <p>Complemento: {address.complemento}</p>
-          <p>Bairro: {address.bairro}</p>
-          <p>Localidade: {address.localidade}</p>
-          <p>UF: {address.uf}</p>
-        </div>
-      )}
-
       <h2 className="text-xl font-semibold mb-4">Carrinho</h2>
       {cart.map((item) => (
         <div key={item._id} className="flex items-center justify-between p-4 border-b">

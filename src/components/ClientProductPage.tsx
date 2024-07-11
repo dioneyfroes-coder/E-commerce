@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { formatCurrencyString } from 'use-shopping-cart';
 import { useCartStore } from '../store';
-import ProductReviews from './ProductReviews';
 
 interface Product {
   id: string;
@@ -40,7 +39,12 @@ const ClientProductPage = ({ productId }: { productId: string }) => {
   return (
     <div>
       <h1>{product.name}</h1>
-      <img src={product.images[0]} alt={product.name} className="w-full h-48 object-cover mb-4 rounded-lg" />
+      <img 
+        src={product.images[0]} 
+        alt={product.name} 
+        className="w-500 h-500 object-cover mb-4 rounded-lg" 
+        style={{ width: '500px', height: '500px' }}
+      />
       <p>{product.description}</p>
       <p>
         {formatCurrencyString({
@@ -59,7 +63,6 @@ const ClientProductPage = ({ productId }: { productId: string }) => {
       })} className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
         Adicionar ao Carrinho
       </button>
-      <ProductReviews productId={productId} />
     </div>
   );
 };

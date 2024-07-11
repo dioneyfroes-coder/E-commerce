@@ -7,4 +7,7 @@ module.exports = {
   compiler: {
     styledComponents: true,
   },
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI,
+  },
 };
