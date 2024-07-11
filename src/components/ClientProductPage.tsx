@@ -58,8 +58,7 @@ const ClientProductPage = ({ productId }: { productId: string }) => {
         name: product.name,
         price: product.price,
         imageUrl: product.images[0],
-        description: product.description || "",
-        currency: product.currency,
+        quantity: 0
       })} className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
         Adicionar ao Carrinho
       </button>
