@@ -19,8 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       name: product.name,
       price: product.price,
       imageUrl: product.imageUrl,
-      description: product.description || "",
-      currency: 'BRL'
+      quantity: 0
     });
   };
 
